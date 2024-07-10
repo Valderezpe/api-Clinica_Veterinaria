@@ -15,7 +15,7 @@ export default class CreateAppointmentUseCase {
     const schedule = await this.database.getScheduleById(scheduleId);
 
     if (!schedule?.available) {
-      throw new Error("Agenda não estar disponivél nessa data!");
+      throw new Error("Agenda não estar disponível nessa data!");
     }
 
     await this.database.updateSchedule(schedule.id, { available: false });
