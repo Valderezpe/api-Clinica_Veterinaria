@@ -1,4 +1,5 @@
 import DataBaseService from "@/infra/DataBaseService";
+import { BussinesError, NotFoundError } from "@/infra/helpers/Erros";
 
 export default class CreateAppointmentUseCase {
   constructor(readonly database: DataBaseService) {}
@@ -8,14 +9,14 @@ export default class CreateAppointmentUseCase {
     const patient = await this.database.getPatientById(patientId);
 
     if (!patient) {
-      throw new Error("Paciente não encontrado!");
+      throw new NotFoundError("Paciente não encontrado!");
     }
 
     // verificar se a  agenda existe com o id passado e está disponivel.
     const schedule = await this.database.getScheduleById(scheduleId);
 
     if (!schedule?.available) {
-      throw new Error("Agenda não estar disponível nessa data!");
+      throw new BussinesError("Agenda não estar disponível nessa data!");
     }
 
     await this.database.updateSchedule(schedule.id, { available: false });
